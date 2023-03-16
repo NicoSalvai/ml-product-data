@@ -1,12 +1,12 @@
 import boto3
-
+import os 
 
 def resource():
     return boto3.resource('dynamodb',
-                          aws_access_key_id="local",
-                          aws_secret_access_key="local",
-                          region_name="us-west-2",
-                          endpoint_url="http://localhost:8000")
+                          aws_access_key_id=os.environ["aws_access_key_id"],
+                          aws_secret_access_key=os.environ["aws_secret_access_key"],
+                          region_name=os.environ["region_name"],
+                          endpoint_url=os.environ["endpoint_url"])
 
 
 def get_table(table_name):

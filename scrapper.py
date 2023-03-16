@@ -1,13 +1,11 @@
 from selenium.webdriver.common.by import By
-from config.selenium.configs import get_chrome_driver, get_local_chrome_full_screen
+from config.selenium.configs import get_chrome_from_env
 from selenium.webdriver.chrome.webdriver import WebDriver
 import datetime
-
-
+import os
 
 def process_search(url, debug_process_only_one=False):
-    driver = get_chrome_driver(
-        explorer='Chrome', headless=False, argument="--window-size=1920,1200")
+    driver = get_chrome_from_env()
     driver.get(url)
 
     button = driver.find_element(By.XPATH, "//button[@type='button']")
@@ -33,7 +31,7 @@ def process_search(url, debug_process_only_one=False):
 
 def process_product(url, driver: WebDriver = None):
     if driver is None:
-        driver = get_local_chrome_full_screen()
+        driver = get_chrome_from_env()
 
     driver.get(url)
     item_id = driver.find_element(

@@ -1,6 +1,7 @@
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+import os
 
 
 def get_chrome_driver(explorer, headless, argument) -> WebDriver:
@@ -12,6 +13,8 @@ def get_chrome_driver(explorer, headless, argument) -> WebDriver:
     driver = Chrome(options=options)
     return driver
 
-
-def get_local_chrome_full_screen() -> WebDriver:
-    return get_chrome_driver(explorer='Chrome', headless=False, argument="--window-size=1920,1200")
+def get_chrome_from_env() -> WebDriver:
+    headless = True if os.environ["headless"] == "True" else False
+    argument = os.environ["argument"]
+    explorer = os.environ["explorer"]
+    return get_chrome_driver(explorer=explorer, headless=headless, argument=argument)

@@ -1,17 +1,16 @@
 import scrapper as Scrapper
 import persistence.dynamodb.products as Products
+from dotenv import load_dotenv
+import os
 
-
-def process_complete_search(url, save, debug=False):
-    search_results = Scrapper.process_search(url, debug)
+def process_complete_search(url):
+    search_results = Scrapper.process_search(url, True if os.environ["debug"] == "True" else False)
     for item in search_results:
-        if save:
+        if True if os.environ["save"] == "True" else False:
             Products.add_or_update_product(item)
         else:
             print(item)
 
 
-process_complete_search(url="https://listado.mercadolibre.com.ar/consolas-videojuegos/accesorios-consolas/xbox/xbox-series-x-s/joysticks/xbox_NoIndex_True#D[A:xbox,on]",
-                        save=True,
-                        debug=False
-                        )
+load_dotenv()
+process_complete_search(url=os.environ["url"])
