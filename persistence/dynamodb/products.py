@@ -32,6 +32,11 @@ def get_product(id, table=None):
     })
     return result
 
+def check_if_date_of_price_is_available(prices, new_price):
+    for price in prices:
+            if price['date'] == new_price['date']:
+                return False
+    return True
 
 def add_or_update_product(item):
     table = get_products_table()
@@ -39,7 +44,10 @@ def add_or_update_product(item):
 
     if 'Item' in result:
         prices = result['Item']['prices']
-        prices.append(item['prices'][0])
-        update_product_prices(item['id'], prices, table)
+        
+        if check_if_date_of_price_is_available(prices, item['prices'][0]):
+            prices.append(item['prices'][0])
+            update_product_prices(item['id'], prices, table)
     else:
         add_product(item)
+
