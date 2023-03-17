@@ -5,9 +5,9 @@ def get_searches_table():
     return get_table('searches')
 
 
-def get_searches(table=None):
+def get_searches(enabled=True, table=None):
     table = table if table is not None else get_searches_table()
-    result = table.scan(FilterExpression=Attr('enabled').eq(True))
+    result = table.scan(FilterExpression=Attr('enabled').eq(enabled))
     return result['Items']
 
 def update_search_enabled(id: str, enabled:bool, table=None):
