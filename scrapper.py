@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from config.selenium.configs import get_chrome_from_env
 from selenium.webdriver.chrome.webdriver import WebDriver
+from time import sleep
 import datetime
 import os
 
@@ -34,8 +35,7 @@ def process_product(url, driver: WebDriver = None):
         driver = get_chrome_from_env()
 
     driver.get(url)
-    item_id = driver.find_element(
-        By.XPATH, "//input[@name='item_id']").get_attribute('value')
+    sleep(2)
     link = driver.find_element(
         By.XPATH, "//input[@name='parent_url']").get_attribute('value')
     title = driver.find_element(
@@ -50,7 +50,6 @@ def process_product(url, driver: WebDriver = None):
         By.XPATH, "//img[contains(@class,'ui-pdp-image ui-pdp-gallery__figure__image')]").get_attribute('src')
 
     return {
-        'id': item_id,
         'link': link if link.startswith("https:") else "https://articulo.mercadolibre.com.ar" + link,
         'title': title,
         'prices': [

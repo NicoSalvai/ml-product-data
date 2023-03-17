@@ -11,11 +11,11 @@ def add_product(item, table=None):
     print(result)
 
 
-def update_product_prices(id: str, prices, table=None):
+def update_product_prices(link: str, prices, table=None):
     table = table if table is not None else get_products_table()
     result = table.update_item(
         Key={
-            'id': id
+            'link': link
         },
         UpdateExpression='SET prices = :val1',
         ExpressionAttributeValues={
@@ -25,10 +25,10 @@ def update_product_prices(id: str, prices, table=None):
     print(result)
 
 
-def get_product(id, table=None):
+def get_product(link, table=None):
     table = table if table is not None else get_products_table()
     result = table.get_item(Key={
-        'id': id
+        'link': link
     })
     return result
 
@@ -40,14 +40,14 @@ def check_if_date_of_price_is_available(prices, new_price):
 
 def add_or_update_product(item):
     table = get_products_table()
-    result = get_product(item['id'], table)
+    result = get_product(item['link'], table)
 
     if 'Item' in result:
         prices = result['Item']['prices']
         
         if check_if_date_of_price_is_available(prices, item['prices'][0]):
             prices.append(item['prices'][0])
-            update_product_prices(item['id'], prices, table)
+            update_product_prices(item['link'], prices, table)
     else:
         add_product(item)
 
