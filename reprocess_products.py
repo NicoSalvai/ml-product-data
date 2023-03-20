@@ -1,11 +1,11 @@
 import scrapper as Scrapper
 import persistence.dynamodb.products as Products
 from config.selenium.configs import get_chrome_from_env
-from dotenv import load_dotenv
 import os
 
 
 def reprocess_products():
+    print("reprocessing products from DB")
     products = Products.get_products()
     driver = get_chrome_from_env()
     for product in products:
@@ -16,7 +16,3 @@ def reprocess_products():
             Products.add_or_update_product(product)
         else:
             print(product)
-
-
-load_dotenv()
-reprocess_products()

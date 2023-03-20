@@ -1,7 +1,6 @@
 import scrapper as Scrapper
 import persistence.dynamodb.products as Products
 import persistence.dynamodb.searches as Searches
-from dotenv import load_dotenv
 import os
 
 
@@ -23,7 +22,3 @@ def process_searches():
     for search in searches:
         process_complete_search(search)
         Searches.update_search_enabled(search['id'], False)
-
-
-load_dotenv()
-process_searches()
