@@ -32,6 +32,12 @@ def get_product(link, table=None):
     })
     return result
 
+
+def get_products(table=None):
+    table = table if table is not None else get_products_table()
+    result = table.scan()
+    return result['Items']
+
 def check_if_date_of_price_is_available(prices, new_price):
     for price in prices:
             if price['date'] == new_price['date']:

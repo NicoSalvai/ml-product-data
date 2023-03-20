@@ -4,18 +4,21 @@ import persistence.dynamodb.searches as Searches
 from dotenv import load_dotenv
 import os
 
+
 def process_complete_search(search):
-    search_results = Scrapper.process_search(search['link'], True if os.environ["debug"] == "True" else False)
+    search_results = Scrapper.process_search(
+        search['link'], True if os.environ["debug"] == "True" else False)
     for item in search_results:
         item['search_id'] = search['id']
         item['tags'] = search['tags']
-        
+
         if True if os.environ["save"] == "True" else False:
             Products.add_or_update_product(item)
         else:
             print(item)
 
-def process_searches_from_db():
+
+def process_searches():
     searches = Searches.get_searches()
     for search in searches:
         process_complete_search(search)
@@ -23,4 +26,4 @@ def process_searches_from_db():
 
 
 load_dotenv()
-process_searches_from_db()
+process_searches()

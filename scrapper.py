@@ -3,7 +3,7 @@ from config.selenium.configs import get_chrome_from_env
 from selenium.webdriver.chrome.webdriver import WebDriver
 from time import sleep
 import datetime
-import os
+from selenium.common.exceptions import NoSuchElementException
 
 def process_search(url, debug_process_only_one=False):
     driver = get_chrome_from_env()
@@ -56,8 +56,48 @@ def process_product(url, driver: WebDriver = None):
             {
                 'price_symbol': price_symbol,
                 'price_amount': price_amount,
-                'date': datetime.date.today().strftime("%d-%m-%Y")
+                'date': datetime.date.today().strftime("%d-%m-%Y"),
+                'pausado': False
             }
         ],
         'image': image
     }
+
+def check_exists_by_xpath(xpath, driver: WebDriver = None) -> bool:
+    if driver is None:
+        driver = get_chrome_from_env()
+
+    try:
+        driver.find_element(By.XPATH, xpath)
+    except NoSuchElementException:
+        return False
+    return True
+
+
+def get_new_price_prouct(url, driver: WebDriver = None):
+    if driver is None:
+        driver = get_chrome_from_env()
+
+    driver.get(url)
+    sleep(2)
+    
+    pausado = check_exists_by_xpath(xpath="//div[text()='Publicación pausada']", driver=driver)
+    price = driver.find_element(
+        By.XPATH, "//div[contains(@class,'ui-pdp-price')]")
+    price_symbol = price.find_element(
+        By.XPATH, ".//span[contains(@class, 'andes-money-amount__currency-symbol')]").get_attribute('innerHTML')
+    price_amount = price.find_element(
+        By.XPATH, ".//span[contains(@class, 'andes-money-amount__fraction')]").get_attribute('innerHTML')
+
+    return {
+        'link': url,
+        'prices': [
+            {
+                'price_symbol': price_symbol,
+                'price_amount': price_amount,
+                'date': datetime.date.today().strftime("%d-%m-%Y"),
+                'pausado': pausado
+            }
+        ]
+    }
+        
