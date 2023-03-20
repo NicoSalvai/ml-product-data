@@ -10,8 +10,11 @@ def get_chrome_driver(explorer, headless, argument) -> WebDriver:
     if argument and argument.strip():
         options.add_argument(argument)
 
-    driver = Chrome(options=options)
-    return driver
+    driver_path = os.environ["driver_path"]
+    print(driver_path)
+    if driver_path is not None:
+        return Chrome(driver_path, options=options)
+    return Chrome(osoptions=options)
 
 def get_chrome_from_env() -> WebDriver:
     headless = True if os.environ["headless"] == "True" else False
